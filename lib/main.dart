@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/todo.dart';
+import 'package:todo_list/services/sqlite_datasource.dart';
+import 'package:todo_list/services/todo_datasource.dart';
 import 'package:todo_list/widgets/todo_widget.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(
-    create: (context) => TodoList(),
-    child: const TodoApp(),
-  ));
+  WidgetsFlutterBinding.ensureInitialized();
+  GetIt.I.registerSingleton<TodoDatasource>(
+    LocalSQLiteDataSource(),
+  );
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => TodoList(),
+      child: const TodoApp(),
+    ),
+  );
 }
 
 class TodoApp extends StatelessWidget {
@@ -52,22 +62,27 @@ class _TodoHomePageState extends State<TodoHomePage> {
         child: Consumer<TodoList>(
           builder: (context, value, child) {
             listTodo = value;
-            return ListView.builder(
+            return RefreshIndicator(
+              onRefresh: listTodo.refresh,
+              child: ListView.builder(
                 itemCount: listTodo.toDoCount,
                 itemBuilder: (BuildContext context, int i) {
                   return TodoWidget(
                       todo: listTodo.todos[i],
                       backgroundColour: listBackground[i % 2]);
-                });
+                },
+              ),
+            );
           },
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: _openAddTodo,
-          tooltip: "Add list item",
-          child: const Icon(
-            Icons.add,
-          )),
+        onPressed: _openAddTodo,
+        tooltip: "Add list item",
+        child: const Icon(
+          Icons.add,
+        ),
+      ),
       appBar: AppBar(
         title: Consumer<TodoList>(
           builder: (context, value, child) {
@@ -84,9 +99,9 @@ class _TodoHomePageState extends State<TodoHomePage> {
 
   _openAddTodo() {
     showDialog(
-        context: context,
-        builder: ((context) => AlertDialog(
-                content: Column(
+      context: context,
+      builder: ((context) => AlertDialog(
+            content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Padding(
@@ -112,8 +127,9 @@ class _TodoHomePageState extends State<TodoHomePage> {
                 Padding(
                   padding: const EdgeInsets.all(4),
                   child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
+                    onPressed: () {
+                      setState(
+                        () {
                           listTodo.add(Todo(
                             name: _controlName.text,
                             description: _controlDescription.text,
@@ -121,11 +137,15 @@ class _TodoHomePageState extends State<TodoHomePage> {
                           _controlName.clear();
                           _controlDescription.clear();
                           Navigator.pop(context);
-                        });
-                      },
-                      child: const Text("Submit")),
+                        },
+                      );
+                    },
+                    child: const Text("Submit"),
+                  ),
                 ),
               ],
-            ))));
+            ),
+          )),
+    );
   }
 }

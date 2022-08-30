@@ -1,6 +1,8 @@
 import 'dart:collection';
 
 import 'package:flutter/widgets.dart';
+import 'package:get_it/get_it.dart';
+import 'package:todo_list/services/todo_datasource.dart';
 
 class Todo {
   late int id;
@@ -8,7 +10,11 @@ class Todo {
   late String description;
   late bool complete;
 
-  Todo({int id = 0, bool complete = false, required String name, required String description}) {
+  Todo(
+      {int id = 0,
+      bool complete = false,
+      required String name,
+      required String description}) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -20,19 +26,18 @@ class Todo {
     return "$name - ($description)";
   }
 
-
-  Map<String, dynamic> toMap(){
-    return{
-      'id' : id,
-      'name' : name,
-      'description' : description,
-      'complete' : complete ? 1 : 0
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'complete': complete ? 1 : 0
     };
   }
 }
 
 class TodoList extends ChangeNotifier {
-  final List<Todo> _todos = [];
+  late List<Todo> _todos = [];
   UnmodifiableListView<Todo> get todos => UnmodifiableListView(_todos);
   int get toDoCount => _todos.length;
 
@@ -55,6 +60,11 @@ class TodoList extends ChangeNotifier {
     Todo listTodo;
     listTodo = _todos.firstWhere((t) => t.name == todo.name);
     listTodo = todo;
+    notifyListeners();
+  }
+
+  Future<void> refresh() async {
+    _todos = await GetIt.I<TodoDatasource>().all();
     notifyListeners();
   }
 }

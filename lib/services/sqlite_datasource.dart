@@ -1,5 +1,5 @@
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 import '../models/todo.dart';
 import 'package:todo_list/services/todo_datasource.dart';
@@ -42,7 +42,7 @@ class LocalSQLiteDataSource implements TodoDatasource {
     if (initialised) {
       Map<String, dynamic> map = t.toMap();
       map.remove('id');
-      database.insert('todos', map,
+      t.id = await database.insert('todos', map,
           conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     }
