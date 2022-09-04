@@ -33,7 +33,7 @@ class LocalSQLiteDataSource implements TodoDatasource {
           id: maps[index]['id'],
           name: maps[index]['name'],
           description: maps[index]['description'],
-          complete: maps[index]['complete'] != 0);
+          complete: maps[index]['complete'] == 1);
     });
   }
 
@@ -58,6 +58,14 @@ class LocalSQLiteDataSource implements TodoDatasource {
     return false;
   }
 
+  Future<bool> deleteAllTodo() async {
+    if (initialised) {
+      database.delete('todos', where: 'true');
+      return true;
+    }
+    return false;
+  }
+
   @override
   Future<Todo> getTodo(int id) async {
     if (initialised) {
@@ -68,7 +76,7 @@ class LocalSQLiteDataSource implements TodoDatasource {
           id: map[0]['id'],
           name: map[0]['name'],
           description: map[0]['description'],
-          complete: map[0]['complete'] != 0);
+          complete: map[0]['complete'] == 1);
     }
     return Todo(name: "", description: "");
   }

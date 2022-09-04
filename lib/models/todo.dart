@@ -41,25 +41,33 @@ class TodoList extends ChangeNotifier {
   UnmodifiableListView<Todo> get todos => UnmodifiableListView(_todos);
   int get toDoCount => _todos.length;
 
-  void add(Todo todo) {
+  Future<void> add(Todo todo) async {
     _todos.add(todo);
+
+    await GetIt.I<TodoDatasource>().addTodo(todo);
     notifyListeners();
   }
 
-  void removeAll() {
+  Future<void> removeAll() async {
     _todos.clear();
+
+    await GetIt.I<TodoDatasource>().deleteAllTodo();
     notifyListeners();
   }
 
-  void remove(Todo todo) {
+  Future<void> remove(Todo todo) async {
     _todos.removeWhere((element) => element == todo);
+
+    await GetIt.I<TodoDatasource>().deleteTodo(todo);
     notifyListeners();
   }
 
-  void updateTodo(Todo todo) {
+  Future<void> updateTodo(Todo todo) async {
     Todo listTodo;
     listTodo = _todos.firstWhere((t) => t.name == todo.name);
     listTodo = todo;
+
+    await GetIt.I<TodoDatasource>().updateTodo(todo);
     notifyListeners();
   }
 
