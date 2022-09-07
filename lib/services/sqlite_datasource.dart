@@ -59,6 +59,7 @@ class LocalSQLiteDataSource implements TodoDatasource {
     return false;
   }
 
+  @override
   Future<bool> deleteAllTodo() async {
     if (initialised) {
       database.delete('todos', where: 'true');
