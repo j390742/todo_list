@@ -19,6 +19,7 @@ class LocalSQLiteDataSource implements TodoDatasource {
         return db.execute(
             'CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY, name TEXT, description TEXT, complete INTEGER)');
       },
+      version: 2,
     );
     initialised = true;
   }
