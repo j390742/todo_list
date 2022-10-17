@@ -27,6 +27,15 @@ class Todo {
     this.complete = complete;
   }
 
+  factory Todo.fromJson(Map<String, dynamic> json) {
+    //Note: ID isn't passed through. FIx later
+    return Todo(
+        id: json['_id'],
+        name: json['name'] ?? "",
+        description: json['description'] ?? "",
+        complete: json['completed'] ?? false);
+  }
+
   @override
   String toString() {
     return "$name - ($description)";
