@@ -674,3 +674,9 @@ hs_err_pid*
 .flutter-plugins-dependencies
 .packages
 .dart_tool
+.flutter-plugins-dependencies
+.packages
+pubspec.lock
+.dart_tool/package_config_subset
+.dart_tool/package_config.json
+.dart_tool/version
