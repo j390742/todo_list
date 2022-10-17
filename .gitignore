@@ -680,3 +680,7 @@ pubspec.lock
 .dart_tool/package_config_subset
 .dart_tool/package_config.json
 .dart_tool/version
+database.rules.json
+firebase.json
+lib/firebase_options.dart
+macos/Flutter/GeneratedPluginRegistrant.swift
