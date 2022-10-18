@@ -12,10 +12,11 @@ class LocalHiveDataSource implements TodoDatasource {
   Future<void> init() async {
     await Hive.initFlutter();
     Hive.registerAdapter(TodoAdapter());
+    // TODO fix _TypeError (type 'Null' is not a subtype of type 'int') later
     box = await Hive.openBox('todos_box');
 
     //Test value and add test
-    TodoList tdl = TodoList();
+    List<Todo> tdl = List.empty();
     tdl.add(Todo(name: "yes", description: "mon"));
     tdl.add(Todo(name: "no", description: "wed"));
 
@@ -23,13 +24,23 @@ class LocalHiveDataSource implements TodoDatasource {
   }
 
   @override
-  Future<List<Todo>> all() {
-    return box.get('list');
+  Future<List<Todo>> all() async {
+    return box.get('list', defaultValue: []);
   }
 
   @override
-  Future<bool> addTodo(Todo t) {
-    throw UnimplementedError();
+  Future<bool> addTodo(Todo t) async {
+    // get the list currently
+    List<dynamic> all = box.get('list', defaultValue: []);
+
+    // add the new item
+    all.add(t);
+
+    // put the list back
+    box.put('list', all);
+
+    // return if t is in the list stored
+    return box.get('list')[t.id] == t;
   }
 
   @override
@@ -48,7 +59,17 @@ class LocalHiveDataSource implements TodoDatasource {
   }
 
   @override
-  Future<bool> updateTodo(Todo t) {
-    throw UnimplementedError();
+  Future<bool> updateTodo(Todo t) async {
+    // get the list currently
+    List<Todo> all = box.get('list', defaultValue: []);
+
+    // update the new item
+    all[t.id] = t;
+
+    // put the list back
+    box.put('list', all);
+
+    // return if t is in the list stored
+    return box.get('list')[t.id] == t;
   }
 }

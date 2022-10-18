@@ -36,6 +36,10 @@ class Todo {
         complete: json['completed'] ?? false);
   }
 
+  Map<String, dynamic> toJSON() {
+    return {'name': name, 'description': description, 'completed': complete};
+  }
+
   @override
   String toString() {
     return "$name - ($description)";

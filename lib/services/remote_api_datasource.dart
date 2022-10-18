@@ -46,14 +46,44 @@ class RemoteAPIDataSource extends TodoDatasource {
 
   @override
   Future<bool> addTodo(Todo t) async {
+    // initialise database connection
     await initTask;
+    // Get the databse items to be location
+    final DatabaseReference ref = await database.ref('todos/${t.id}');
+
+    // Set the stored data to the data ref
+    ref.set(t.toJSON());
+
+    // Get the item back
+    final DataSnapshot snapshot = await ref.child("todos/${t.id}").get();
+
+    // Return if it was successful or not
+    return snapshot.exists;
   }
 
   @override
-  Future<bool> deleteAllTodo() async {}
+  Future<bool> deleteAllTodo() async {
+    //maybe not the best idea to implement a delete it all for a remote database
+    return false;
+  }
 
   @override
-  Future<bool> deleteTodo(Todo t) async {}
+  Future<bool> deleteTodo(Todo t) async {
+    // almost exactly the same as Add, just with remove instead of set
+    // initialise database connection
+    await initTask;
+    // Get the databse items to be location
+    final DatabaseReference ref = await database.ref('todos/${t.id}');
+
+    // Remove the stored data to the data ref
+    ref.remove();
+
+    // Get the item back
+    final DataSnapshot snapshot = await ref.child("todos/${t.id}").get();
+
+    // Return if it was successful or not
+    return !snapshot.exists;
+  }
 
   @override
   Future<Todo> getTodo(int id) async {
@@ -86,7 +116,19 @@ class RemoteAPIDataSource extends TodoDatasource {
 
   @override
   Future<bool> updateTodo(Todo t) async {
-    //get the specific todo
-    final DatabaseReference ref = await database.ref("todos/${t.id}");
+    // almost exactly the same as Delete, just with update instead of remove
+    // initialise database connection
+    await initTask;
+    // Get the databse items to be location
+    final DatabaseReference ref = await database.ref('todos/${t.id}');
+
+    // Update the stored data to the data ref
+    ref.update(t.toJSON());
+
+    // Get the item back
+    final DataSnapshot snapshot = await ref.child("todos/${t.id}").get();
+
+    // Return if it was successful or not
+    return snapshot.exists;
   }
 } /*snapshot.children.map<Todo>((e) => Todo.fromJson(e.value as Map<String, dynamic>)); */

@@ -684,3 +684,8 @@ database.rules.json
 firebase.json
 lib/firebase_options.dart
 macos/Flutter/GeneratedPluginRegistrant.swift
+.firebaserc
+.flutter-plugins
+.flutter-plugins-dependencies
+.dart_tool/package_config_subset
+.dart_tool/package_config.json

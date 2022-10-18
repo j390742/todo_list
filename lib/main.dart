@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/todo.dart';
+import 'package:todo_list/services/hive_datasource.dart';
+import 'package:todo_list/services/remote_api_datasource.dart';
 import 'package:todo_list/services/sqlite_datasource.dart';
 import 'package:todo_list/services/todo_datasource.dart';
 import 'package:todo_list/widgets/todo_widget.dart';
@@ -9,7 +11,7 @@ import 'package:todo_list/widgets/todo_widget.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   GetIt.I.registerSingleton<TodoDatasource>(
-    LocalSQLiteDataSource(),
+    RemoteAPIDataSource(),
   );
 
   runApp(
