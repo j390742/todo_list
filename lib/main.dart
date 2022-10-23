@@ -11,7 +11,7 @@ import 'package:todo_list/widgets/todo_widget.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   GetIt.I.registerSingleton<TodoDatasource>(
-    RemoteAPIDataSource(),
+    LocalHiveDataSource(),
   );
 
   runApp(
@@ -64,16 +64,21 @@ class _TodoHomePageState extends State<TodoHomePage> {
         child: Consumer<TodoList>(
           builder: (context, value, child) {
             listTodo = value;
-            return RefreshIndicator(
-              onRefresh: listTodo.refresh,
-              child: ListView.builder(
-                itemCount: listTodo.toDoCount,
-                itemBuilder: (BuildContext context, int i) {
-                  return TodoWidget(
-                      todo: listTodo.todos[i],
-                      backgroundColour: listBackground[i % 2]);
-                },
-              ),
+            return FutureBuilder(
+              builder: (context, snapshot) {
+                return RefreshIndicator(
+                  onRefresh: listTodo.refresh,
+                  child: ListView.builder(
+                    itemCount: listTodo.toDoCount,
+                    itemBuilder: (BuildContext context, int i) {
+                      return TodoWidget(
+                          todo: listTodo.todos[i],
+                          backgroundColour: listBackground[i % 2]);
+                    },
+                  ),
+                );
+              },
+              future: listTodo.refresh(),
             );
           },
         ),
@@ -88,9 +93,8 @@ class _TodoHomePageState extends State<TodoHomePage> {
       appBar: AppBar(
         title: Consumer<TodoList>(
           builder: (context, value, child) {
-            TodoList smallList = value;
             return Text(
-                "Completed count: ${(smallList.todos.where((element) => element.complete)).length}");
+                "Completed count: ${(value.todos.where((element) => element.complete)).length}");
           },
         ),
         backgroundColor: primary,
