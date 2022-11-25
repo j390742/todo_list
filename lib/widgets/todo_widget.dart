@@ -12,10 +12,10 @@ class TodoWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _TodoWidgetState createState() => _TodoWidgetState();
+  TodoWidgetState createState() => TodoWidgetState();
 }
 
-class _TodoWidgetState extends State<TodoWidget> {
+class TodoWidgetState extends State<TodoWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -17,15 +17,10 @@ class Todo {
   late bool complete;
 
   Todo(
-      {int id = 0,
-      bool complete = false,
-      required String name,
-      required String description}) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.complete = complete;
-  }
+      {this.id = 0,
+      required this.name,
+      required this.description,
+      this.complete = false});
 
   factory Todo.fromJson(Map<String, dynamic> json) {
     //Note: ID isn't passed through. FIx later
@@ -60,9 +55,9 @@ class TodoAdapter extends TypeAdapter<Todo> {
   Todo read(BinaryReader reader) {
     return Todo(
         id: reader.read(0) ?? 0,
-        name: reader.read(1),
-        description: reader.read(2),
-        complete: reader.read(3));
+        name: reader.read(1) ?? "",
+        description: reader.read(2) ?? "",
+        complete: reader.read(3) ?? false);
   }
 
   @override

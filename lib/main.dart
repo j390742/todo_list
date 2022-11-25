@@ -3,8 +3,8 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/todo.dart';
 import 'package:todo_list/services/hive_datasource.dart';
-import 'package:todo_list/services/remote_api_datasource.dart';
-import 'package:todo_list/services/sqlite_datasource.dart';
+// import 'package:todo_list/services/remote_api_datasource.dart';
+// import 'package:todo_list/services/sqlite_datasource.dart';
 import 'package:todo_list/services/todo_datasource.dart';
 import 'package:todo_list/widgets/todo_widget.dart';
 
@@ -44,10 +44,10 @@ class TodoHomePage extends StatefulWidget {
   const TodoHomePage({Key? key}) : super(key: key);
 
   @override
-  _TodoHomePageState createState() => _TodoHomePageState();
+  TodoHomePageState createState() => TodoHomePageState();
 }
 
-class _TodoHomePageState extends State<TodoHomePage> {
+class TodoHomePageState extends State<TodoHomePage> {
   final TextEditingController _controlName = TextEditingController();
   final TextEditingController _controlDescription = TextEditingController();
 

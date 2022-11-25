@@ -3,8 +3,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_list/services/todo_datasource.dart';
 
 class LocalHiveDataSource implements TodoDatasource {
+  late Future initData;
+
   LocalHiveDataSource() {
-    init();
+    initData = Future(init);
   }
 
   late Box box;
@@ -16,20 +18,24 @@ class LocalHiveDataSource implements TodoDatasource {
     box = await Hive.openBox('todos_box');
 
     //Test value and add test
+    /*
     List<Todo> tdl = List.empty(growable: true);
     tdl.add(Todo(name: "yes", description: "mon", id: 0));
     tdl.add(Todo(name: "no", description: "wed", id: 1));
 
     await box.put('list', tdl);
+    */
   }
 
   @override
   Future<List<Todo>> all() async {
+    await initData;
     return box.get('list');
   }
 
   @override
   Future<bool> addTodo(Todo t) async {
+    await initData;
     // get the list currently
     List<dynamic> all = box.get('list', defaultValue: []);
 
@@ -44,24 +50,28 @@ class LocalHiveDataSource implements TodoDatasource {
   }
 
   @override
-  Future<bool> deleteAllTodo() {
+  Future<bool> deleteAllTodo() async {
+    await initData;
     throw UnimplementedError();
   }
 
   @override
-  Future<bool> deleteTodo(Todo t) {
+  Future<bool> deleteTodo(Todo t) async {
+    await initData;
     throw UnimplementedError();
   }
 
   @override
-  Future<Todo> getTodo(int id) {
+  Future<Todo> getTodo(int id) async {
+    await initData;
     return box.get('list')[id];
   }
 
   @override
   Future<bool> updateTodo(Todo t) async {
+    await initData;
     // get the list currently
-    List<Todo> all = box.get('list', defaultValue: []);
+    List<dynamic> all = box.get('list', defaultValue: []);
 
     // update the new item
     all[t.id] = t;
