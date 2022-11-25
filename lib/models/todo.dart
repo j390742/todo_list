@@ -59,7 +59,7 @@ class TodoAdapter extends TypeAdapter<Todo> {
   @override
   Todo read(BinaryReader reader) {
     return Todo(
-        id: reader.read(0),
+        id: reader.read(0) ?? 0,
         name: reader.read(1),
         description: reader.read(2),
         complete: reader.read(3));

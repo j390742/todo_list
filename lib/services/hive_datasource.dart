@@ -12,20 +12,20 @@ class LocalHiveDataSource implements TodoDatasource {
   Future<void> init() async {
     await Hive.initFlutter();
     Hive.registerAdapter(TodoAdapter());
-    // TODO fix _TypeError (type 'Null' is not a subtype of type 'int') later
+    //Hive.deleteBoxFromDisk('todos_box');
     box = await Hive.openBox('todos_box');
 
     //Test value and add test
-    List<Todo> tdl = List.empty();
-    tdl.add(Todo(name: "yes", description: "mon"));
-    tdl.add(Todo(name: "no", description: "wed"));
+    List<Todo> tdl = List.empty(growable: true);
+    tdl.add(Todo(name: "yes", description: "mon", id: 0));
+    tdl.add(Todo(name: "no", description: "wed", id: 1));
 
     await box.put('list', tdl);
   }
 
   @override
   Future<List<Todo>> all() async {
-    return box.get('list', defaultValue: []);
+    return box.get('list');
   }
 
   @override

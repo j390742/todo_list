@@ -11,7 +11,7 @@ import 'package:todo_list/widgets/todo_widget.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   GetIt.I.registerSingleton<TodoDatasource>(
-    RemoteAPIDataSource(),
+    LocalHiveDataSource(),
   );
 
   runApp(
